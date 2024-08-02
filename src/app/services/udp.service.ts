@@ -5,7 +5,7 @@ declare var chrome: any;
 @Injectable({
   providedIn: 'root',
 })
-export class TelloService {
+export class UdpService {
   private telloAddress = '192.168.10.1';
   private telloPort = 8889;
   private socketId: number | null = null;
@@ -63,5 +63,51 @@ export class TelloService {
         }
       });
     }
+  }
+
+  startVideoStream(): Promise<MediaStream> {
+    return navigator.mediaDevices.getUserMedia({
+      video: {
+        deviceId: {
+          exact: 'Tello Video Stream', // This may need to be adjusted based on the actual device ID
+        },
+      },
+      audio: false,
+    });
+  }
+
+  async getStatus(): Promise<any> {
+    this.sendCommand('battery?');
+    const battery = await this.receiveResponse();
+    this.sendCommand('height?');
+    const height = await this.receiveResponse();
+    this.sendCommand('speed?');
+    const speed = await this.receiveResponse();
+    this.sendCommand('temp?');
+    const temperature = await this.receiveResponse();
+
+    return {
+      battery: parseInt(battery),
+      height: parseInt(height),
+      speed: parseInt(speed),
+      temperature: parseInt(temperature),
+    };
+  }
+
+  private receiveResponse(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if (chrome && chrome.sockets && chrome.sockets.udp) {
+        chrome.sockets.udp.onReceive.addListener((info: any) => {
+          if (info.socketId === this.socketId) {
+            const message = new TextDecoder().decode(new Uint8Array(info.data));
+            resolve(message);
+          } else {
+            reject('No response received');
+          }
+        });
+      } else {
+        reject('UDP sockets not available');
+      }
+    });
   }
 }

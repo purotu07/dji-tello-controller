@@ -16,4 +16,66 @@
   <ion-button expand="full" color="secondary" (click)="sendCommand('command')">
     Send Command Mode
   </ion-button>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="medium" (click)="move('up')">
+          Up
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="medium" (click)="move('left')">
+          Left
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="full" color="medium" (click)="move('forward')">
+          Forward
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="full" color="medium" (click)="move('right')">
+          Right
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="medium" (click)="move('back')">
+          Back
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="medium" (click)="move('down')">
+          Down
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Drone Status</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Baterai: {{ battery }}%</p>
+      <p>Tinggi: {{ height }} cm</p>
+      <p>Kecepatan: {{ speed }} cm/s</p>
+      <p>Temperatur: {{ temperature }}°C</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Camera Feed</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <video #videoPlayer width="100%" autoplay></video>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
